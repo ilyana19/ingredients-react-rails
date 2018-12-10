@@ -70,7 +70,7 @@ class App extends Component {
               </Segment.Group>
             }
             {drink.steps && <p>{drink.steps}</p>}
-            {drink.source && <Button basic size="tiny" color="teal" href="{drink.source}">Source</Button>}
+            {drink.source && <Button basic size="tiny" color="teal" href={drink.source}>Source</Button>}
           </Container>
         }
       </Container>
