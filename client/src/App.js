@@ -37,7 +37,7 @@ class App extends Component {
   }
 
   getDrink(id) {
-    this.fetch(`/api/drinks${id}`)
+    this.fetch(`/api/drinks/${id}`)
       .then(drink => this.setState({drink: drink}))
   }
 
@@ -60,9 +60,26 @@ class App extends Component {
           : <Container textAlign="center">No drinks found.</Container>
         }
         <Divider section />
+        {drinks &&
+          <Container>
+            <Header as="h2">{drink.title}</Header>
+            {drink.description && <p>{drink.description}</p>}
+            {drink.ingredients &&
+              <Segment.Group>
+                {drink.ingredients.map((ingredient, index) => <Segment key={index}>{ingredient.description}</Segment>)}
+              </Segment.Group>
+            }
+            {drink.steps && <p>{drink.steps}</p>}
+            {drink.source && <Button basic size="tiny" color="teal" href="{drink.source}">Source</Button>}
+          </Container>
+        }
       </Container>
 
-      : <Container text></Container>
+      : <Container text>
+        <Dimmer active inverted>
+          <Loader content="Loading" />
+        </Dimmer>
+    </Container>
   }
 }
 
