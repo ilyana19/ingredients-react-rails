@@ -1,27 +1,68 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import ReactDOM from 'react-dom'
+import 'semantic-ui-css/semantic.css'
 import './App.css';
+import { Container, Header, Segment, Button, Icon, Dimmer, Loader, Divider } from 'semantic-ui-react'
 
 class App extends Component {
-  render() {
+  constructor(props) {
+    super(props)
+    this.state = {}
+    this.getDrinks = this.getDrinks.bind(this)
+    this.getDrink = this.getDrink.bind(this)
+  }
+
+  componentDidMount() {
+    this.getDrinks()
+  }
+
+  fetch (endpoint) {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+      window.fetch(endpoint)
+        .then(response => response.json())
+        .catch(error => console.log(error))
+    )
+  }
+
+  getDrinks() {
+    this.fetch('/api/drinks')
+      .then(drinks => {
+        if (drinks.length) {
+          this.setState({drinks: drinks})
+          this.getDrink(drinks[0].id)
+        } else {
+          this.setState({drinks: []})
+        }
+      })
+  }
+
+  getDrink(id) {
+    this.fetch(`/api/drinks${id}`)
+      .then(drink => this.setState({drink: drink}))
+  }
+
+  render() {
+    let {drinks, drink} = this.state
+
+    return drinks
+      ? <Container text>
+        <header as="h2" icon textAlign="center" color="teal">
+          <Icon name="unordered list" circular />
+          <Header.Content>List of Ingredients</Header.Content>
         </header>
-      </div>
-    );
+        <Divider hidden section />
+        {drinks && drinks.length
+          ? <Button.Group color="teal" fluid widths={drinks.length}>
+              {Object.keys(drinks).map((key) => {
+                return <Button active={drink && drink.id === drinks[key].id} fluid key={key} onClick={() => this.getDrink(drinks[key].id)}>{drinks[key].title}</Button>
+              })}
+          </Button.Group>
+          : <Container textAlign="center">No drinks found.</Container>
+        }
+        <Divider section />
+      </Container>
+
+      : <Container text></Container>
   }
 }
 
