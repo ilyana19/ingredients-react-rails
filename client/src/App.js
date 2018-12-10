@@ -60,7 +60,7 @@ class App extends Component {
           : <Container textAlign="center">No drinks found.</Container>
         }
         <Divider section />
-        {drinks &&
+        {drink &&
           <Container>
             <Header as="h2">{drink.title}</Header>
             {drink.description && <p>{drink.description}</p>}
